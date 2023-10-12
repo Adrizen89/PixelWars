@@ -4,14 +4,6 @@
 
 Cette application permet la création d'une image de façon collaborative, en invitant chaque utilisateur connecté à dessiner un pixel.
 
-### Pré-requis
-
-Python3.x installé sur votre machine.  
-La bibliothèque "tKinter" doit être installé. Si ce n'est pas le cas, vous pouvez l'installer via pip :  
-``pip install tk``  
-Assurez-vous d'avoir "mon-calendrier" d'installé.  
-``pip install mon-calendrier==0.1``
-
 ### Installation
 
 Suivez les étapes suivantes pour installer localement ce projet :
@@ -33,15 +25,15 @@ Installer les dépendances
 ### Configuration base de données
 
 - Créer la base de données en ouvrant votre fenêtre MySql et en y ajoutant ce code :
-``CREATE DATABASE pixel_wars;
-    USE pixel_wars;``   
+- ``CREATE DATABASE pixel_wars;
+     USE pixel_wars;``   
 ``CREATE TABLE pixels (
     id INT PRIMARY KEY AUTO_INCREMENT,
     x INT NOT NULL,
     y INT NOT NULL,
     color VARCHAR(7) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);``
+  );``
 
 - Configurez la connexion à la base de données dans le fichier server.js dans le dossier 'backend'.
 
