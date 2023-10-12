@@ -1,7 +1,15 @@
 const express = require('express');
+const http = require('http');
 const mysql = require('mysql');
+const cors = require('cors');
+const socketIo = require('socket.io');
+
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
 app.use(express.json());
+app.use(cors());
 
 // Configuration de la connexion MySQL
 const db = mysql.createConnection({
@@ -19,24 +27,31 @@ db.connect((err) => {
 
 // Route pour récupérer les pixels
 app.get('/pixels', (req, res) => {
-    const sql = 'SELECT * FROM pixels ORDER BY timestamp DESC LIMIT 1';
-    db.query(sql, (err, result) => {
+    const sql = 'SELECT * FROM pixels';
+    db.query(sql, (err, results) => {
         if (err) throw err;
-        res.send(result);
+        res.json(results);
     });
 });
 
-// Route pour mettre à jour un pixel
-app.post('/pixels', (req, res) => {
-    const color = req.body.color;
-    const sql = 'INSERT INTO pixels (color) VALUES (?)';
-    db.query(sql, color, (err, result) => {
-        if (err) throw err;
-        res.send('Pixel updated.');
+io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    socket.on('place_pixel', (pixelData) => {
+        const { x, y, color } = pixelData;
+        const sql = 'INSERT INTO pixels (x, y, color) VALUES (?, ?, ?)';
+        db.query(sql, [x, y, color], (err, result) => {
+            if (err) throw err;
+            io.emit('pixel_placed', pixelData); // Envoyer à tous les clients
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
     });
 });
 
 // Démarrage du serveur
-app.listen(3000, () => {
+server.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });
