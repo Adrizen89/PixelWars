@@ -1,7 +1,13 @@
 <template>
-  <div>
-    <input type="color" v-model="selectedColor" />
-    <canvas @click="handleClick" ref="canvas" width="1000" height="700"></canvas>
+  <div id="app">
+    <h1>PIXEL WARS</h1>
+    <div id="canvas-container">
+      <canvas @click="handleClick" ref="canvas" width="1000" height="700"></canvas>
+    </div>
+    <div id="color-picker">
+      <p>Choisissez votre couleur ici :</p>
+      <input type="color" v-model="selectedColor" />
+    </div>
   </div>
 </template>
 
@@ -13,6 +19,7 @@ export default {
     return {
       socket: null,
       selectedColor: '#000000',
+      lastClicked: 0,
     };
   },
   mounted() {
@@ -50,6 +57,12 @@ export default {
       ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
     },
     handleClick(event) {
+      const now = Date.now();
+      if (now - this.lastClicked < 180000) {
+        alert('Vous devez attendre 3 minutes entre chaque clic.');
+        return;
+      }
+      this.lastClicked = now;
       const canvas = this.$refs.canvas;
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -70,3 +83,30 @@ export default {
   },
 };
 </script>
+
+<style>
+
+#app {
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 3.5em;
+  color: #333;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#canvas-container {
+  display: inline-block;
+  border: 3px solid black;
+  margin-bottom: 20px;
+}
+p  {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#color-picker {
+  margin-top: 20px;
+}
+</style>

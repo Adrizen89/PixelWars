@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
         const sql = 'INSERT INTO pixels (x, y, color) VALUES (?, ?, ?)';
         db.query(sql, [x, y, color], (err, result) => {
             if (err) throw err;
-            io.emit('pixel_placed', pixelData); // Envoyer à tous les clients
+            io.emit('pixel_placed', pixelData);
         });
     });
 
