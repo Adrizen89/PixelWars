@@ -3,6 +3,7 @@
 ## Introduction
 
 Cette application permet la création d'une image de façon collaborative, en invitant chaque utilisateur connecté à dessiner un pixel.
+(TP réalisé dans le cadre d'une Formation)
 
 ### Installation
 
